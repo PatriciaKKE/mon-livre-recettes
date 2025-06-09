@@ -27,9 +27,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Debug - List files in working directory
+        run: |
+          pwd
+          ls -al
+
 
       - name: Build Docker images
         run: docker-compose build
+        working-directory: .
 
       - name: Run backend tests
         run: |
