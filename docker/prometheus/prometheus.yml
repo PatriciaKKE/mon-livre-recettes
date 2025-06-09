@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s # Définit l'intervalle par défaut pour collecter les métriques
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090'] # Prometheus collecte ses propres métriques
+
+  - job_name: 'backend'
+    # Tu auras besoin d'une librairie Django pour exposer les métriques au format Prometheus.
+    # Par exemple, 'django-prometheus'.
+    # Une fois installée et configurée dans ton projet Django, elle exposera les métriques sur une URL (souvent /metrics).
+    # Le service 'backend' dans Docker Compose est accessible par son nom d'hôte 'backend' sur le réseau Docker.
+    static_configs:
+      - targets: ['backend:8000']
+    metrics_path: '/prometheus/metrics' # Le chemin où ton backend expose les métriques Prometheus (à configurer dans Django)
+
+  # Optionnel: Scraper les métriques de Nginx (si tu as configuré Nginx pour les exposer)
+  # - job_name: 'nginx'
+  #   static_configs:
+  #     - targets: ['nginx:9113'] # Exemple: si tu utilises un exporter Nginx sur
