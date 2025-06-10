@@ -45,16 +45,17 @@ jobs:
       - name: Run frontend tests
         run: |
           cd frontend
-          docker-compose run --rm frontend npm test
+          docker-compose run --rm frontend_dev npm test
+        working-directory: .
+
       - name: List built images (for verification)
         run: docker images
         working-directory: .
       - name: Tag and Push Docker images
         run: |
-          # Tag les images avec le nom du registre et le SHA du commit
           docker tag mon_livre_recettes-backend:latest ghcr.io/${{ github.repository }}/backend:${{ github.sha }}
           docker tag mon_livre_recettes-frontend:latest ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
-          # Pousse les images
+
           docker push ghcr.io/${{ github.repository }}/backend:${{ github.sha }}
           docker push ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
         working-directory: .
