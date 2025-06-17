@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    build:
-      context: ./docker
-      dockerfile: Dockerfile.frontend
+    build: ./frontend
     ports:
       - "8080:3000"
   #  volumes:
@@ -24,6 +22,7 @@ services:
 
   db:
     image: postgres:13
+    env_file: .env
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
