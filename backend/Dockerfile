@@ -1,12 +1,13 @@
 FROM python:3.11-slim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-RUN pip install --upgrade poetry
+COPY pyproject.toml poetry.lock ./
 
-COPY pyproject.toml poetry.lock* ./
-
-RUN poetry install --no-root
+RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-root
 
 COPY . .
 
