@@ -1,21 +1,22 @@
-
-FROM node:20-alpine as builder
+FROM node:lts-alpine as builder
 
 WORKDIR /app
 
-COPY frontend/package*.json ./
+COPY package*.json ./
 RUN npm install
 
-COPY frontend/ .
+COPY . .
 
 RUN npm run build
 
-FROM nginx:alpine
+FROM alpine:latest
 
-COPY docker/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+RUN apk add --no-cache nodejs npm
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+RUN npm install -g serve
 
-EXPOSE 80
+COPY --from=builder /app/dist /app/dist
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+
+CMD ["serve", "-s", "/app/dist"]
